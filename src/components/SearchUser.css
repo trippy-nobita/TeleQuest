@@ -1,0 +1,39 @@
+body {
+    background-color: #121212;
+    color: #FFFFFF;
+}
+
+.MuiInputBase-input {
+    color: #FFFFFF;
+}
+
+.MuiTableContainer-root {
+    background-color: #212121;
+    color: #FFFFFF;
+}
+
+.MuiTableHead-root {
+    background-color: #333333;
+}
+
+.MuiTableCell-head {
+    color: #FFFFFF;
+}
+
+.MuiTableRow-root {
+    background-color: #292929;
+
+    &:hover {
+        background-color: #383838;
+    }
+}
+
+.output {
+    color: white;
+}
+
+.searchBar{
+    background-color: rgba(144, 173, 170, 0.4);
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
