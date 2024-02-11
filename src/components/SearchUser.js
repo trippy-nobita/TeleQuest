@@ -6,7 +6,7 @@ import './SearchUser.css';
 const SearchUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const GITHUB_TOKEN = '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';
+  const GITHUB_TOKEN = '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';
 
   const handleInputChange = (event) => {
     const value = event.target.value.trim();
