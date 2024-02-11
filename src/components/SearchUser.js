@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 import axios from 'axios';
+import React, { useState } from 'react';
 import './SearchUser.css';
 
 const SearchUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const GITHUB_TOKEN = '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';
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
   const handleInputChange = (event) => {
     const value = event.target.value.trim();
