@@ -1,12 +1,24 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
-import axios from 'axios';
+import { Octokit } from '@octokit/rest';
 import React, { useState } from 'react';
 import './SearchUser.css';
 
 const SearchUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const GITHUB_TOKEN = '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';
+
+  const octokit = new Octokit({
+    auth: `token ${GITHUB_TOKEN}`,
+    userAgent: 'YourApp/1.0.0', // Replace with your app's user agent
+    baseUrl: 'https://api.github.com',
+    log: {
+      debug: () => {},
+      info: () => {},
+      warn: console.warn,
+      error: console.error,
+    },
+  });
 
   const handleInputChange = (event) => {
     const value = event.target.value.trim();
@@ -21,17 +33,16 @@ const SearchUser = () => {
 
   const fetchUsers = async (username) => {
     try {
-      const response = await axios.get(`https://api.github.com/search/users?q=${username}`, {
-        headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-        }
+      const response = await octokit.search.users({
+        q: username,
       });
+
       if (response.data && response.data.items) {
         const users = response.data.items;
-        const promises = users.map(user => fetchUserDetails(user.login));
+        const promises = users.map((user) => fetchUserDetails(user.login));
         const results = await Promise.all(promises);
         // Sort the results based on the number of followers in descending order
-        const sortedResults = results.filter(user => user.followers !== undefined).sort((a, b) => b.followers - a.followers);
+        const sortedResults = results.filter((user) => user.followers !== undefined).sort((a, b) => b.followers - a.followers);
         setSearchResults(sortedResults);
       } else {
         setSearchResults([]);
@@ -44,10 +55,8 @@ const SearchUser = () => {
 
   const fetchUserDetails = async (username) => {
     try {
-      const response = await axios.get(`https://api.github.com/users/${username}`, {
-        headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-        }
+      const response = await octokit.users.getByUsername({
+        username,
       });
       return response.data;
     } catch (error) {
@@ -58,27 +67,32 @@ const SearchUser = () => {
 
   return (
     <div>
-      <div className = "searchBar"> <TextField
-        label="Search"
-        variant="outlined"
-        value={searchTerm}
-        onChange={handleInputChange}
-        fullWidth
-      />
-    </div>
+      <div className="searchBar">
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchTerm}
+          onChange={handleInputChange}
+          fullWidth
+        />
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-           <TableRow>
-              <TableCell style = {{color: "white", fontStyle: "bold"}}>Username</TableCell>
-              <TableCell style = {{color: "white", fontStyle: "bold"}}>Number of Followers</TableCell>
+            <TableRow>
+              <TableCell style={{ color: 'white', fontStyle: 'bold' }}>Username</TableCell>
+              <TableCell style={{ color: 'white', fontStyle: 'bold' }}>Number of Followers</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {searchResults.map(user => (
+            {searchResults.map((user) => (
               <TableRow key={user.id}>
-                <TableCell > <div className= "output"> {user.login} </div> </TableCell>
-                <TableCell><div className= "output"> {user.followers}  </div> </TableCell>
+                <TableCell>
+                  <div className="output">{user.login}</div>
+                </TableCell>
+                <TableCell>
+                  <div className="output">{user.followers}</div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -86,6 +100,6 @@ const SearchUser = () => {
       </TableContainer>
     </div>
   );
-}
+};
 
 export default SearchUser;
