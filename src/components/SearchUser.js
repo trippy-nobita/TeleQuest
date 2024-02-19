@@ -6,11 +6,11 @@ import './SearchUser.css';
 const SearchUser = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
-  const GITHUB_TOKEN = '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';
+  const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
   const octokit = new Octokit({
     auth: `token ${GITHUB_TOKEN}`,
-    userAgent: 'YourApp/1.0.0', // Replace with your app's user agent
+    userAgent: 'YourApp/1.0.0',
     baseUrl: 'https://api.github.com',
     log: {
       debug: () => {},
